@@ -76,7 +76,7 @@ impl<G: Generator> Iterator for Pin<&mut YieldIter<G>> {
 /// use yield_iter::generator;
 ///
 /// let x = 10;
-/// let mut iter = generator! {
+/// let iter = generator! {
 ///     let r = &x;
 ///
 ///     for i in 0..5u32 {
