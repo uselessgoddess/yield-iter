@@ -13,3 +13,10 @@ Safe implementation of the `Iterator` trait for `Generator`
 """
 categories = ["algorithms"]
 keywords = ["generator", "yield", "iterator"]
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "vec"
+harness = false
