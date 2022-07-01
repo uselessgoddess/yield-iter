@@ -1,9 +1,13 @@
 #![feature(generator_trait)]
 
+use std::collections::LinkedList;
 use std::{
     ops::{Generator, GeneratorState},
     pin::Pin,
 };
+
+#[cfg(feature = "rayon")]
+use rayon::prelude::*;
 
 /// A wrapper struct around Generators,
 /// providing a safe implementation of the [`Iterator`] trait.
@@ -68,6 +72,20 @@ impl<G: Generator> Iterator for Pin<&mut YieldIter<G>> {
     }
 }
 
+#[cfg(feature = "rayon")]
+impl<G> IntoParallelIterator for YieldIter<G>
+where
+    G: Generator + Unpin,
+    G::Yield: Sync + Send,
+{
+    type Iter = rayon::vec::IntoIter<Self::Item>;
+    type Item = G::Yield;
+
+    fn into_par_iter(self) -> Self::Iter {
+        Vec::from_iter(self).into_par_iter()
+    }
+}
+
 /// Create `YieldIter` with the provided generator body
 /// # Examples
 /// ```
@@ -93,6 +111,6 @@ macro_rules! generator {
             $crate::YieldIter::new_unchecked(|| {
                 $($x)*
             })
-        }.fuse()
+        }//.fuse()
     };
 }
