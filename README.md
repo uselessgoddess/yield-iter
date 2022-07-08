@@ -3,7 +3,7 @@
 ## Usage
 
 ```rust
-#![feature(generators, generator_trait)]
+#![feature(generators)]
 
 use yield_iter::generator;
 
